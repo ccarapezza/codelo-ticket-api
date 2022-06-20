@@ -18,6 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 // database
 const db = require("./app/models");
 const Ticket = db.ticket;
+const Role = db.role;
+const User = db.user;
 
 //db.sequelize.sync();
 db.sequelize.sync({ force: true }).then(() => {
