@@ -1,23 +1,23 @@
 module.exports = (sequelize, Sequelize) => {
-  const Particiante = sequelize.define("tickets", {
-    n: {
-      type: Sequelize.INTEGER
-    },
-    name: {
+  const Ticket = sequelize.define("tickets", {
+    nombre: {
       type: Sequelize.STRING
     },
-    hash: {
+    apellido: {
       type: Sequelize.STRING
     },
-    grow: {
+    dni: {
       type: Sequelize.STRING
     },
-    esJurado: {
+    tipo: {
+      type: Sequelize.STRING
+    },
+    ingresado: {
       type: Sequelize.BOOLEAN,
       allowNull: false,
       defaultValue: false
     },
   });
 
-  return Particiante;
+  return Ticket;
 };
