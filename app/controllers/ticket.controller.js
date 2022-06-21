@@ -1,39 +1,15 @@
 const db = require("../models");
 const Ticket = db.ticket;
-const Muestra = db.muestra;
-const Calificacion = db.calificacion;
-const Categoria = db.categoria;
-const Mesa = db.mesa;
-const Dojo = db.dojo;
-const Op = db.Sequelize.Op;
 const crypto = require('crypto');
 
 exports.create = async(req, res) => {
   const data = req.body;
-
-  const ticketsN = await Ticket.findAll({raw: true, attributes: ['n']});
-  const usedTicketsNs = ticketsN.map((ticket)=>ticket.n);
-  let availableTicketsN = new Array();
-  for(let i=1; i<120; i++){
-    if(!usedTicketsNs.includes(i)){
-      availableTicketsN.push(i);
-    }
-  }
-  const n = availableTicketsN[Math.floor(Math.random() * availableTicketsN.length)];
-
-  const muestraN = await Muestra.findAll({raw: true, attributes: ['n']});
-  const usedMuestrasNs = muestraN.map((muestra)=>muestra.n);
-  let availableMuestraN = new Array();
-  for(let i=1; i<120; i++){
-    if(!usedMuestrasNs.includes(i)){
-      availableMuestraN.push(i);
-    }
-  }
-
+  
   Ticket.create({
     nombre: data.nombre,
     apellido: data.apellido,
     dni: data.dni,
+    email: data.email,
     tipo: data.tipo,
     hash: crypto.createHash('sha1').update(data.apellido+data.dni+new Date().getTime().toString()).digest('hex')
   })
@@ -53,6 +29,7 @@ exports.update = (req, res) => {
     nombre: data.nombre,
     apellido: data.apellido,
     dni: data.dni,
+    email: data.email,
     tipo: data.tipo,
   }, {
     where: {

@@ -9,8 +9,16 @@ module.exports = (sequelize, Sequelize) => {
     dni: {
       type: Sequelize.STRING
     },
+    email: {
+      type: Sequelize.STRING
+    },
     tipo: {
       type: Sequelize.STRING
+    },
+    pago: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     },
     ingresado: {
       type: Sequelize.BOOLEAN,
