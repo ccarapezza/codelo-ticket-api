@@ -1,9 +1,13 @@
 const express = require("express");
 const cors = require("cors");
+
 const app = express();
 
-app.options('*', cors());
-app.use(cors());
+var corsOptions = {
+  origin: "https://codelo-ticket.herokuapp.com",
+};
+
+app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
 app.use(express.json());
