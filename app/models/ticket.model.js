@@ -7,12 +7,16 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING
     },
     dni: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      unique: true,
     },
     email: {
       type: Sequelize.STRING
     },
     tipo: {
+      type: Sequelize.STRING
+    },
+    observaciones: {
       type: Sequelize.STRING
     },
     pago: {
@@ -24,6 +28,9 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.BOOLEAN,
       allowNull: false,
       defaultValue: false
+    },
+    hash: {
+      type: Sequelize.STRING
     },
   });
 

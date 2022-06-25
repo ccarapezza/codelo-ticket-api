@@ -32,6 +32,25 @@ module.exports = function (app) {
     controller.create
   );
 
+  app.post(
+    "/api/ticket/reserve",
+    [
+      authJwt.verifyToken,
+      check('nombre').exists({checkFalsy: true}),
+      check('apellido').exists({checkFalsy: true}),
+      check('dni').exists({checkFalsy: true}),
+      check('tipo').exists({checkFalsy: true}),
+      (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+      }
+    ],
+    controller.reserve
+  );
+
   app.put(
     "/api/ticket/update",
     [
@@ -50,6 +69,54 @@ module.exports = function (app) {
       }
     ],
     controller.update
+  );
+  
+  app.put(
+    "/api/ticket/cut-ticket-by-id",
+    [
+      authJwt.verifyToken,
+      check('id').exists({checkFalsy: true}),
+      (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+      }
+    ],
+    controller.cutTicketById
+  );
+  
+  app.put(
+    "/api/ticket/cut-ticket-by-hash",
+    [
+      authJwt.verifyToken,
+      check('hash').exists({checkFalsy: true}),
+      (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+      }
+    ],
+    controller.cutTicketByHash
+  );
+
+  app.put(
+    "/api/ticket/update-pago",
+    [
+      authJwt.verifyToken,
+      check('id').exists({checkFalsy: true}).custom((value, { req }) => {return !isNaN(value)}),
+      (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+      }
+    ],
+    controller.updatePago
   );
 
   app.delete(
