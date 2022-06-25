@@ -3,7 +3,6 @@ const config = require("../config/auth.config.js");
 const db = require("../models");
 const User = db.user;
 const Ticket = db.ticket;
-const Mesa = db.mesa;
 
 verifyToken = (req, res, next) => {
   let token = req.headers["x-access-token"];
@@ -23,46 +22,6 @@ verifyToken = (req, res, next) => {
     req.userId = decoded.id;
     next();
   });
-};
-
-verifyTokenOrJudgeHash = (req, res, next) => {
-  let hash = req.headers["x-access-hash"];
-  let token = req.headers["x-access-token"];
-
-  if (hash) {
-    Ticket.findOne({
-      where: {
-        hash: hash,
-      },
-      include: [{model: Mesa, as: "mesa"}, {model: Mesa, as: "mesaSecundaria"}]
-    }).then((ticket) => {
-      if(ticket&&ticket?.esJurado){
-        req.ticket = ticket?.toJSON();
-        next();
-      }else{
-        return res.status(403).send({
-          message: "Forbidden!"
-        });
-      }
-    }).catch((err) => {
-      res.status(500).send({ message: err.message });
-    });
-  }else if (token) {
-    jwt.verify(token, config.secret, (err, decoded) => {
-      if (err) {
-        return res.status(403).send({
-          message: "Forbidden!"
-        });
-      }
-      req.userId = decoded.id;
-      next();
-    });
-  }else{
-    return res.status(403).send({
-      message: "No token or hash provided!"
-    });
-  }
-
 };
 
 isAdmin = (req, res, next) => {
@@ -127,6 +86,5 @@ const authJwt = {
   isAdmin: isAdmin,
   isModerator: isModerator,
   isModeratorOrAdmin: isModeratorOrAdmin,
-  verifyTokenOrJudgeHash: verifyTokenOrJudgeHash
 };
 module.exports = authJwt;
