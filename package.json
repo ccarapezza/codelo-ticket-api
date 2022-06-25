@@ -1,7 +1,7 @@
 {
-  "name": "node-js-jwt-auth",
+  "name": "codelo-ticket-api",
   "version": "1.0.0",
-  "description": "Node.js Demo for JWT Authentication",
+  "description": "API for codelo-ticket app",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,10 +11,11 @@
     "jwt",
     "authentication",
     "express",
-    "mysql"
+    "mysql",
+    "ticket"
   ],
-  "author": "bezkoder",
-  "license": "ISC",
+  "author": "ccarapezza",
+  "license": "GPL",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
