@@ -4,7 +4,7 @@ const cors = require("cors");
 const app = express();
 
 var corsOptions = {
-  origin: "https://codelo-ticket.herokuapp.com",
+  origin: "*",
 };
 
 app.use(cors(corsOptions));
