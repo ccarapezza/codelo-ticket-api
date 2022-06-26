@@ -85,7 +85,7 @@ exports.reserve = async(req, res) => {
     tipo: data.tipo,
     observaciones: data.observaciones,
     pago: false,
-    hash: crypto.createHash('sha1').update(data.apellido+data.dni+new Date().getTime().toString()).digest('hex')
+    hash: crypto.createHash('sha1').update(data.dni+new Date().getTime().toString()).digest('hex')
   })
   .then((ticket) => {
     console.log("Ticket reserved: ",ticket);
