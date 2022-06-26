@@ -144,7 +144,7 @@ exports.updatePago = (req, res) => {
         res.status(500).send({ message: err.message });
       });
     }else{
-      res.status(500).send({ message: "El ticket ya está pago.",ticket });
+      res.status(400).send({ message: "El ticket ya está pago.",ticket });
     }
   })
   .catch((err) => {
@@ -154,15 +154,39 @@ exports.updatePago = (req, res) => {
 
 exports.cutTicketById = (req, res) => {
   const data = req.body;
-  cutTicket(req, res, { id: data.id });
-}
+
+  Ticket.findOne({
+    where:{
+      hash: data.hash
+    }
+  })
+  .then((ticket) => {
+    if(ticket.pago&&!ticket.ingresado){
+      Ticket.update({
+        ingresado: true
+      }, {
+        where: {
+          hash: data.hash
+        }
+      })
+      .then((ticket) => {
+        res.status(200).send(ticket);
+      })
+      .catch((err) => {
+        res.status(500).send({ message: err.message, ticket });
+      });
+    }else if(!ticket.pago){
+      res.status(400).send({ message: "El ticket no está pago.", ticket });
+    }else if(!ticket.ingresado){
+      res.status(400).send({ message: "El ticket ya está cortado.", ticket });
+    }
+  })
+  .catch((err) => {
+    res.status(500).send({ message: err.message });
+  });
+};
 
 exports.cutTicketByHash = (req, res) => {
-  const data = req.body;
-  cutTicket(req, res, { hash: data.hash });
-}
-
-const cutTicket = (req, res, where) => {
   const data = req.body;
 
   Ticket.findOne({
