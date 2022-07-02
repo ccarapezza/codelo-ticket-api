@@ -276,3 +276,24 @@ exports.ticketVerify = (req, res) => {
     res.status(500).send({ message: err.message });
   });
 };
+
+exports.resendEmail = (req, res) => {
+  const data = req.body;
+  console.log("Resend email... ");
+  Ticket.findOne({
+    where:{
+      id: data.id
+    }
+  })
+  .then((ticket) => {
+    if(!ticket.pago){
+      sendEmailToCustomer(ticket);
+      res.status(200).send({ message: "E-Ticket enviado correctamente al destinatario!" });
+    }else{
+      res.status(400).send({ message: "El ticket no está pago.",ticket });
+    }
+  })
+  .catch((err) => {
+    res.status(500).send({ message: err.message });
+  });  
+};
