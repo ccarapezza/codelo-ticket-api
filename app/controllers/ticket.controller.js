@@ -297,3 +297,23 @@ exports.resendEmail = (req, res) => {
     res.status(500).send({ message: err.message });
   });  
 };
+
+exports.resendAllEmails = (req, res) => {
+  const data = req.body;
+  console.log("Resend all emails... ");
+  Ticket.findAll({
+    where:{
+      id: data.id,
+      pago: true
+    }
+  })
+  .then((tickets) => {
+    tickets.forEach(ticket => {
+      sendEmailToCustomer(ticket);
+    });
+    res.status(200).send({ message: "E-Tickets enviados a los destinatarios." });
+  })
+  .catch((err) => {
+    res.status(500).send({ message: err.message });
+  });  
+};

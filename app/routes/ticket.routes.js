@@ -159,4 +159,35 @@ module.exports = function (app) {
     controller.getById
   );
 
+  app.put(
+    "/api/ticket/resend-email",
+    [
+      authJwt.verifyToken,
+      check('id').exists({checkFalsy: true}).custom((value, { req }) => {return !isNaN(value)}),
+      (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+      }
+    ],
+    controller.resendEmail
+  );
+
+  app.put(
+    "/api/ticket/resend-all-emails",
+    [
+      authJwt.verifyToken,
+      (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+      }
+    ],
+    controller.resendAllEmails
+  );
+
 };
