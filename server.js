@@ -26,7 +26,7 @@ db.sequelize.sync();
 // simple route
 app.get("/", (req, res) => {
   res.json({
-    message: "Bienvenido Codelo-Ticket API. MAIN - test (" + process.env.NODE_ENV + ")",
+    message: "Bienvenido Codelo-Ticket API. MAIN (" + process.env.NODE_ENV + ")",
   });
 });
 
