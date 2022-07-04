@@ -9,8 +9,8 @@ let mailTransport = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: "codeloticket@cogollosdeloeste.com.ar",
-    pass: "k@pwv4294Djr",
+    user: process.env.EMAIL_ACCOUNT,
+    pass: process.env.EMAIL_PASSWORD
   },
 });
 
