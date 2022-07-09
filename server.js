@@ -50,6 +50,7 @@ app.get("/api/data", async (req, res) => {
 // routes
 require("./app/routes/auth.routes")(app);
 require("./app/routes/ticket.routes")(app);
+require("./app/routes/param.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
