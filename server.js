@@ -17,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // database
 const db = require("./app/models");
+const { param } = require("express-validator");
 const Ticket = db.ticket;
 const Role = db.role;
 const User = db.user;
@@ -85,5 +86,35 @@ function initial() {
       */
   }).then((user) => {
       user.setRoles([1]);
+  });
+
+  Param.create({
+      name: "admin",
+      email: "admin@admin.com"
+  });
+
+  Param.create({
+    name: "EMAIL_SUBJECT",
+    value: "Tu entrada para la 8va Copa Cata del Oeste"
+  });
+
+  Param.create({
+    name: "EMAIL_MESSAGE",
+    value: "Hola %NOMBRE%, a continuación tenés tus entradas para la '8va Copa Capa del Oeste', podés imprimirla o mostrarla directamente desde tu celular en la entrada."
+  });
+
+  Param.create({
+    name: "EMAIL_EVENT_DATE",
+    value: "Domingo 17 de Julio"
+  });
+
+  Param.create({
+    name: "EMAIL_EVENT_HOUR",
+    value: "12:00 hrs."
+  });
+
+  Param.create({
+    name: "EMAIL_EVENT_LOCATION",
+    value: " - "
   });
 }
