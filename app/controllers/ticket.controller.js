@@ -1,5 +1,6 @@
 const db = require("../models");
 const Ticket = db.ticket;
+const Param = db.param;
 const crypto = require('crypto');
 const nodemailer = require("nodemailer");
 const QRCode = require('qrcode');
@@ -13,6 +14,20 @@ let mailTransport = nodemailer.createTransport({
     pass: process.env.EMAIL_PASSWORD
   },
 });
+
+const EMAIL_MESSAGE_TEMPLATE = `<p style='text-align: center'>%MESSAGE%</p>
+  <div style='margin: 0 auto 15px; width: fit-content; border: 1px solid black; display: grid;'>
+    <div style='text-align: center; background-color: black; color: white; font-weight: bold; padding: 10px;'>
+      <p>%NOMBRE% %APELLIDO%</p><p>E-TICKET #%TICKET_ID%</p>
+    </div>
+    <img src='cid:qr-code-codelo-ticket' style='margin: 0 auto;'/>
+  </div>
+  <div style='border: 1px solid black; width: fit-content; margin: 0 auto; display:table;'>
+    <img width='200' src='cid:logo-copa' style='display: table-cell;'/>
+    <ul style='list-style-type: none; display: table-cell; vertical-align: middle; padding: 15px;'>
+      <li><b>Fecha:</b> %EVENT_DATE%</li><li><b>Hora:</b> %EVENT_TIME%</li><li><b>Ubicaci&oacute;n:</b> %EVENT_LOCATION% </li><li><b>Titular:</b> %NOMBRE% %APELLIDO% </li><li><b>DNI:</b> %DNI% </li><li><b>Email:</b> %EMAIL% </li><li><b>Fecha de compra:</b> %FECHA_COMPRA% </li>
+    </ul>
+  </div>`;
 
 /**
  * Send email to the given email.
@@ -29,14 +44,56 @@ function sendEmail(mailOptions) {
  async function sendEmailToCustomer(ticket) {
   if(ticket.email&&ticket.nombre&&ticket.hash){
     const qrCodeB64 = await QRCode.toDataURL(ticket.hash);
+
+    const params = await Param.findAll();
+    
+    for (let i = 0; i < params.length; i++) {
+      const param = params[i];
+      let subject = "Tu entrada -";
+      let msgContent = "-";
+      let eventDate = "-";
+      let eventTime = "-";
+      let eventLocation = "-";
+
+      switch (param.name) {
+        case "EMAIL_SUBJECT":
+          subject = param.value;
+          subject = subject.replace("%NOMBRE%", ticket.nombre)
+          break;
+        case "EMAIL_MESSAGE":
+          msgContent = param.value;
+          msgContent = msgContent.replace("%NOMBRE%", ticket.nombre)
+          break;
+        case "EMAIL_EVENT_DATE":
+          eventDate = param.value;
+          break;
+        case "EMAIL_EVENT_HOUR":
+          eventTime = param.value;
+          break;
+        case "EMAIL_EVENT_LOCATION":
+          eventLocation = param.value;
+          break;
+      }
+    }
+
+    let message = EMAIL_MESSAGE_TEMPLATE;
+    message = message.replace("%MESSAGE%", );
+    message = message.replace("%NOMBRE%", ticket.nombre);
+    message = message.replace("%APELLIDO%", ticket.apellido);
+    message = message.replace("%TICKET_ID%", ticket.id);
+    message = message.replace("%EVENT_DATE%", eventDate);
+    message = message.replace("%EVENT_TIME%", eventTime);
+    message = message.replace("%EVENT_LOCATION%", eventLocation);
+    message = message.replace("%DNI%", ticket.dni);
+    message = message.replace("%EMAIL%", ticket.email);
+    message = message.replace("%FECHA_COMPRA%", new Date(ticket.createdAt).toLocaleString());
   
     sendEmail({
       from: '"🎟️ Codelo Ticket 🎟️" <codeloticket@cogollosdeloeste.com.ar>', // sender address
       to: ticket.email, // list of receivers
-      subject: "Tu entrada para la 8va Copa Cata del Oeste", // Subject line
-      text: "Hola "+ticket.nombre+", aquí tienen tus entradas para la '8va Copa Capa del Oeste'", // plain text body
-      
-      html: "<p style='text-align: center'>Hola <b>"+ticket.nombre+"</b>, a continuación tenés tus entradas para la '8va Copa Capa del Oeste', podés imprimirla o mostrarla directamente desde tu celular en la entrada.</p><div style='margin: 0 auto 15px; width: fit-content; border: 1px solid black; display: grid;'><div style='text-align: center; background-color: black; color: white; font-weight: bold; padding: 10px;'><p>"+ticket.nombre+" "+ticket.apellido+"</p><p>E-TICKET #"+ticket.id+"</p></div><img src='cid:qr-code-codelo-ticket' style='margin: 0 auto;'/></div><div style='border: 1px solid black; width: fit-content; margin: 0 auto; display:table;'><img width='200' src='cid:logo-copa' style='display: table-cell;'/><ul style='list-style-type: none; display: table-cell; vertical-align: middle; padding: 15px;'><li><b>Fecha:</b> Domingo 17 de Julio</li><li><b>Hora:</b> 12:00 hrs.</li><li><b>Ubicaci&oacute;n:</b> - </li><li><b>Titular:</b> "+ticket.nombre+" "+ticket.apellido+" </li><li><b>DNI:</b> "+ticket.dni+" </li><li><b>Email:</b> "+ticket.email+" </li><li><b>Fecha de compra:</b> "+(new Date(ticket.createdAt).toLocaleString())+" </li></ul></div>",
+      subject: subject, // Subject line
+      text: msgContent, // plain text body
+      html: message,
       attachments: [{
           "filename": "qr-code-codelo-ticket.png",
           "path":qrCodeB64,
