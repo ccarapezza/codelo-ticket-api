@@ -21,6 +21,7 @@ const { param } = require("express-validator");
 const Ticket = db.ticket;
 const Role = db.role;
 const User = db.user;
+const Param = db.param;
 
 /*
 db.sequelize.sync();
@@ -86,11 +87,6 @@ function initial() {
       */
   }).then((user) => {
       user.setRoles([1]);
-  });
-
-  Param.create({
-      name: "admin",
-      email: "admin@admin.com"
   });
 
   Param.create({
