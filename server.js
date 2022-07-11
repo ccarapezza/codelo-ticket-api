@@ -78,7 +78,7 @@ function initial() {
   User.create({
       username: "admin",
       email: "admin@admin.com",
-      password: "$2a$08$6e/QNEys..r1DPhtHqxVvOtMAfYOg.60p6wW8VANtapcyZg652aRS", //admin
+      password: "$2a$08$7ceHWSMUYjCJbW8Aal8BVuTLqKn8LBjwWgKlV0tpx5S6DzeBLzmqC", //QKfbt4fLAT
       /*
       password: "$2a$08$ANDS1Yo6EQSQfzHQoybU2eBCR.3Ut6t4AL099R8hI3J.NE.o4vEaW", //23737nefasta
       password: "$2a$08$7ceHWSMUYjCJbW8Aal8BVuTLqKn8LBjwWgKlV0tpx5S6DzeBLzmqC", //QKfbt4fLAT
