@@ -159,7 +159,7 @@ module.exports = function (app) {
     controller.getById
   );
 
-  app.put(
+  app.post(
     "/api/ticket/resend-email",
     [
       authJwt.verifyToken,
@@ -175,7 +175,7 @@ module.exports = function (app) {
     controller.resendEmail
   );
 
-  app.put(
+  app.post(
     "/api/ticket/resend-all-emails",
     [
       authJwt.verifyToken,
