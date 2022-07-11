@@ -17,7 +17,6 @@ app.use(express.urlencoded({ extended: true }));
 
 // database
 const db = require("./app/models");
-const { param } = require("express-validator");
 const Ticket = db.ticket;
 const Role = db.role;
 const User = db.user;
