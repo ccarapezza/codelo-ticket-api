@@ -360,7 +360,6 @@ exports.resendAllEmails = (req, res) => {
   console.log("Resend all emails... ");
   Ticket.findAll({
     where:{
-      id: data.id,
       pago: true
     }
   })
