@@ -79,7 +79,7 @@ function sendEmail(mailOptions) {
     let message = EMAIL_MESSAGE_TEMPLATE;
     message = message.replace("%MESSAGE%", msgContent);
     message = message.replace(/%NOMBRE%/g, ticket.nombre);
-    message = message.replace(/%APELLIDO/g, ticket.apellido);
+    message = message.replace(/%APELLIDO%/g, ticket.apellido);
     message = message.replace("%TICKET_ID%", ticket.id);
     message = message.replace("%EVENT_DATE%", eventDate);
     message = message.replace("%EVENT_TIME%", eventTime);
