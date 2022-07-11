@@ -46,15 +46,15 @@ function sendEmail(mailOptions) {
     const qrCodeB64 = await QRCode.toDataURL(ticket.hash);
 
     const params = await Param.findAll();
+
+    let subject = "Tu entrada -";
+    let msgContent = "-";
+    let eventDate = "-";
+    let eventTime = "-";
+    let eventLocation = "-";
     
     for (let i = 0; i < params.length; i++) {
       const param = params[i];
-      let subject = "Tu entrada -";
-      let msgContent = "-";
-      let eventDate = "-";
-      let eventTime = "-";
-      let eventLocation = "-";
-
       switch (param.name) {
         case "EMAIL_SUBJECT":
           subject = param.value;
@@ -62,7 +62,7 @@ function sendEmail(mailOptions) {
           break;
         case "EMAIL_MESSAGE":
           msgContent = param.value;
-          msgContent = msgContent.replace("%NOMBRE%", ticket.nombre)
+          msgContent = msgContent.replace(/%NOMBRE%/g, "<b>"+ticket.nombre+"</b>")
           break;
         case "EMAIL_EVENT_DATE":
           eventDate = param.value;
@@ -77,9 +77,9 @@ function sendEmail(mailOptions) {
     }
 
     let message = EMAIL_MESSAGE_TEMPLATE;
-    message = message.replace("%MESSAGE%", );
-    message = message.replace("%NOMBRE%", ticket.nombre);
-    message = message.replace("%APELLIDO%", ticket.apellido);
+    message = message.replace("%MESSAGE%", msgContent);
+    message = message.replace(/%NOMBRE%/g, ticket.nombre);
+    message = message.replace(/%APELLIDO/g, ticket.apellido);
     message = message.replace("%TICKET_ID%", ticket.id);
     message = message.replace("%EVENT_DATE%", eventDate);
     message = message.replace("%EVENT_TIME%", eventTime);
