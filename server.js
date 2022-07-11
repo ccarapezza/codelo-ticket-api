@@ -17,24 +17,16 @@ app.use(express.urlencoded({ extended: true }));
 
 // database
 const db = require("./app/models");
-const { param } = require("express-validator");
 const Ticket = db.ticket;
 const Role = db.role;
 const User = db.user;
-const Param = db.param;
 
-/*
 db.sequelize.sync();
-*/
-db.sequelize.sync({ force: true }).then(() => {
-  console.log("Drop and Resync Database with { force: true }");
-  initial();
-});
 
 // simple route
 app.get("/", (req, res) => {
   res.json({
-    message: "Bienvenido Codelo-Ticket API. RESYNC (" + process.env.NODE_ENV + ")",
+    message: "Bienvenido Codelo-Ticket API. MAIN (" + process.env.NODE_ENV + ")",
   });
 });
 
@@ -59,58 +51,3 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`CodeloTicket API - Server is running on port ${PORT}.`);
 });
-
-function initial() {
-  Role.create({
-      id: 1,
-      name: "user",
-  });
-
-  Role.create({
-      id: 2,
-      name: "moderator",
-  });
-
-  Role.create({
-      id: 3,
-      name: "admin",
-  });
-
-  User.create({
-      username: "admin",
-      email: "admin@admin.com",
-      password: "$2a$08$6e/QNEys..r1DPhtHqxVvOtMAfYOg.60p6wW8VANtapcyZg652aRS", //admin
-      /*
-      password: "$2a$08$ANDS1Yo6EQSQfzHQoybU2eBCR.3Ut6t4AL099R8hI3J.NE.o4vEaW", //23737nefasta
-      password: "$2a$08$7ceHWSMUYjCJbW8Aal8BVuTLqKn8LBjwWgKlV0tpx5S6DzeBLzmqC", //QKfbt4fLAT
-      password: "$2a$08$6e/QNEys..r1DPhtHqxVvOtMAfYOg.60p6wW8VANtapcyZg652aRS", //admin
-      */
-  }).then((user) => {
-      user.setRoles([1]);
-  });
-
-  Param.create({
-    name: "EMAIL_SUBJECT",
-    value: "Tu entrada para la 8va Copa Cata del Oeste"
-  });
-
-  Param.create({
-    name: "EMAIL_MESSAGE",
-    value: "Hola %NOMBRE%, a continuación tenés tus entradas para la '8va Copa Capa del Oeste', podés imprimirla o mostrarla directamente desde tu celular en la entrada."
-  });
-
-  Param.create({
-    name: "EMAIL_EVENT_DATE",
-    value: "Domingo 17 de Julio"
-  });
-
-  Param.create({
-    name: "EMAIL_EVENT_HOUR",
-    value: "12:00 hrs."
-  });
-
-  Param.create({
-    name: "EMAIL_EVENT_LOCATION",
-    value: " - "
-  });
-}
