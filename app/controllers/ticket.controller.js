@@ -343,7 +343,7 @@ exports.resendEmail = (req, res) => {
     }
   })
   .then((ticket) => {
-    if(!ticket.pago){
+    if(ticket.pago){
       sendEmailToCustomer(ticket);
       res.status(200).send({ message: "E-Ticket enviado correctamente al destinatario!" });
     }else{
